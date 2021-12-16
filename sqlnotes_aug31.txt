@@ -1,0 +1,795 @@
+SQL>create user sachindra1 identified by s123;
+
+User created.
+
+SQL>grant connect,resoucre to sachindra1;
+grant connect,resoucre to sachindra1
+              *
+ERROR at line 1:
+ORA-01919: role 'RESOUCRE' does not exist 
+
+
+SQL>grant connect,resource to sachindra1;
+
+Grant succeeded.
+
+SQL>create user roja identified by r123;
+
+User created.
+
+SQL>create user seema identified by s123;
+
+User created.
+
+SQL>grant connect, resource to roja,seema;
+
+Grant succeeded.
+
+SQL>connect:-- sys priv:-- ex connect session, create procedure ......
+SP2-0306: Invalid option.
+Usage: CONN[ECT] [{logon|/|proxy} [AS {SYSDBA|SYSOPER|SYSASM}] [edition=value]]
+where <logon> ::= <username>[/<password>][@<connect_identifier>]
+      <proxy> ::= <proxyuser>[<username>][/<password>][@<connect_identifier>]
+SQL>resource :-- object privs like select, insert, ......
+SP2-0734: unknown command beginning "resource :..." - rest of line ignored.
+SQL>cle scr
+
+SQL>conn sachindra
+Connected.
+SQL>sho user
+USER is "SACHINDRA"
+SQL>select * from tab;
+
+no rows selected
+
+SQL>create table demo(empno number(4),ename varchar2(20));
+
+Table created.
+
+SQL>insert into demo values(2001,'james');
+
+1 row created.
+
+SQL>insert into demo values(2002,'bond');
+
+1 row created.
+
+SQL>commit;
+
+Commit complete.
+
+SQL>select * from demo;
+
+ EMPNO ENAME                                                                    
+------ --------                                                                 
+  2001 james                                                                    
+  2002 bond                                                                     
+
+SQL>conn roja/r123
+Connected.
+SQL>select * from tab;
+
+no rows selected
+
+SQL>conn sys as sydba
+SP2-0306: Invalid option.
+Usage: CONN[ECT] [{logon|/|proxy} [AS {SYSDBA|SYSOPER|SYSASM}] [edition=value]]
+where <logon> ::= <username>[/<password>][@<connect_identifier>]
+      <proxy> ::= <proxyuser>[<username>][/<password>][@<connect_identifier>]
+SQL>
+SQL>conn sys as sysdba
+Connected.
+SQL>grant select on sachindra.demo to roja,seema;
+
+Grant succeeded.
+
+SQL>conn roja/r123
+Connected.
+SQL>select * from demo;
+select * from demo
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL>select * from sachindra.demo;
+
+ EMPNO ENAME                                                                    
+------ --------                                                                 
+  2001 james                                                                    
+  2002 bond                                                                     
+
+SQL>conn seema/s123
+Connected.
+SQL>select * from sachindra.demo;
+
+ EMPNO ENAME                                                                    
+------ --------                                                                 
+  2001 james                                                                    
+  2002 bond                                                                     
+
+SQL>conn sys as sysdba
+Connected.
+SQL>revoke select on sachindra.demo from roja,seema;
+
+Revoke succeeded.
+
+SQL>conn roja/r123
+Connected.
+SQL>select * from sachindra.demo;
+select * from sachindra.demo
+                        *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL>how to change the password:--
+> .
+SP2-0734: unknown command beginning "how to cha..." - rest of line ignored.
+SQL>sho user
+USER is "ROJA"
+SQL>conn sys as sysdba
+Connected.
+SQL>alter user seema identified by udupi123;
+
+User altered.
+
+SQL>conn seema/udupi123
+Connected.
+SQL>drop user rajiv;
+drop user rajiv
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+SQL>conn sys as sysdba
+Connected.
+SQL>drop user rajiv;
+drop user rajiv
+*
+ERROR at line 1:
+ORA-01940: cannot drop a user that is currently connected 
+
+
+SQL>sho user
+USER is "SYS"
+SQL>drop user rajiv cascade;
+drop user rajiv cascade
+*
+ERROR at line 1:
+ORA-01940: cannot drop a user that is currently connected 
+
+
+SQL>sh ouser
+SP2-0042: unknown command "sh ouser" - rest of line ignored.
+SQL>conn avi/avi123
+ERROR:
+ORA-01017: invalid username/password; logon denied 
+
+
+Warning: You are no longer connected to ORACLE.
+SQL>conn avi/a123
+ERROR:
+ORA-01017: invalid username/password; logon denied 
+
+
+SQL>conn sachindra/s123
+Connected.
+SQL>select * from demo;
+
+ EMPNO ENAME                                                                    
+------ --------                                                                 
+  2001 james                                                                    
+  2002 bond                                                                     
+
+SQL>conn rajiv/r123
+ERROR:
+ORA-01017: invalid username/password; logon denied 
+
+
+Warning: You are no longer connected to ORACLE.
+SQL>sho user
+USER is ""
+SQL>conn scott/tiger
+Connected.
+SQL>select * from jemp;
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+  2033 james     20000                                                          
+  1011 aniruddh                                                                 
+  7369 DBA                                                                      
+  7566 DBA                                                                      
+  7788 DBA                                                                      
+  7876 DBA                                                                      
+  7902 DBA       45000                                                          
+  1106 ravi      31000     90                                                   
+     1 naveen1                                                                  
+     2 naveen2                                                                  
+     3 naveen3                                                                  
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+     4 naveen4                                                                  
+     5 naveen5                                                                  
+     6 naveen6                                                                  
+     7 naveen7                                                                  
+     8 naveen8                                                                  
+     9 naveen9                                                                  
+    10 naveen10                                                                 
+    11 naveen11                                                                 
+    12 naveen12                                                                 
+    13 naveen13                                                                 
+    14 naveen14                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    15 naveen15                                                                 
+    16 naveen16                                                                 
+    17 naveen17                                                                 
+    18 naveen18                                                                 
+    19 naveen19                                                                 
+    20 naveen20                                                                 
+    21 naveen21                                                                 
+    22 naveen22                                                                 
+    23 naveen23                                                                 
+    24 naveen24                                                                 
+    25 naveen25                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    26 naveen26                                                                 
+    27 naveen27                                                                 
+    28 naveen28                                                                 
+    29 naveen29                                                                 
+    30 naveen30                                                                 
+    31 naveen31                                                                 
+    32 naveen32                                                                 
+    33 naveen33                                                                 
+    34 naveen34                                                                 
+    35 naveen35                                                                 
+    36 naveen36                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    37 naveen37                                                                 
+    38 naveen38                                                                 
+    39 naveen39                                                                 
+    40 naveen40                                                                 
+    41 naveen41                                                                 
+    42 naveen42                                                                 
+    43 naveen43                                                                 
+    44 naveen44                                                                 
+    45 naveen45                                                                 
+    46 naveen46                                                                 
+    47 naveen47                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    48 naveen48                                                                 
+    49 naveen49                                                                 
+    50 naveen50                                                                 
+    51 naveen51                                                                 
+    52 naveen52                                                                 
+    53 naveen53                                                                 
+    54 naveen54                                                                 
+    55 naveen55                                                                 
+    56 naveen56                                                                 
+    57 naveen57                                                                 
+    58 naveen58                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    59 naveen59                                                                 
+    60 naveen60                                                                 
+    61 naveen61                                                                 
+    62 naveen62                                                                 
+    63 naveen63                                                                 
+    64 naveen64                                                                 
+    65 naveen65                                                                 
+    66 naveen66                                                                 
+    67 naveen67                                                                 
+    68 naveen68                                                                 
+    69 naveen69                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    70 naveen70                                                                 
+    71 naveen71                                                                 
+    72 naveen72                                                                 
+    73 naveen73                                                                 
+    74 naveen74                                                                 
+    75 naveen75                                                                 
+    76 naveen76                                                                 
+    77 naveen77                                                                 
+    78 naveen78                                                                 
+    79 naveen79                                                                 
+    80 naveen80                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    81 naveen81                                                                 
+    82 naveen82                                                                 
+    83 naveen83                                                                 
+    84 naveen84                                                                 
+    85 naveen85                                                                 
+    86 naveen86                                                                 
+    87 naveen87                                                                 
+    88 naveen88                                                                 
+    89 naveen89                                                                 
+    90 naveen90                                                                 
+    91 naveen91                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    92 naveen92                                                                 
+    93 naveen93                                                                 
+    94 naveen94                                                                 
+    95 naveen95                                                                 
+    96 naveen96                                                                 
+    97 naveen97                                                                 
+    98 naveen98                                                                 
+    99 naveen99                                                                 
+   100 naveen10                                                                 
+       0                                                                        
+                                                                                
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+  9007 nav                                                                      
+  9009 sun                                                                      
+  9011 prab                                                                     
+  9013 tej                                                                      
+
+112 rows selected.
+
+SQL>select * from jemp1;
+
+ EMPNO ENAME      ESAL      MGRNO DEPTNO                                        
+------ -------- ------ ---------- ------                                        
+  3000 amar                                                                     
+  3003 sai                                                                      
+  3006 nav                                                                      
+  3009 hari                                                                     
+  2002 naveen                         20                                        
+  2009 james     20000       1102     20                                        
+  2011 bond      20000       1102     20                                        
+  1106 ravi      31000       1103     90                                        
+  1107 sharma    29000       1103     60                                        
+  1108 varma      9292       1104     70                                        
+
+10 rows selected.
+
+SQL>select * from myemp;
+select * from myemp
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL>select * from jemp2;
+
+ EMPNO ENAME      ESAL      MGRNO DEPTNO                                        
+------ -------- ------ ---------- ------                                        
+  1101 naveen     1000         10    ###                                        
+  1102 reddy      1000         10    ###                                        
+  2001                         10    ###                                        
+  2002                         10    ###                                        
+  2003                         10    ###                                        
+  2004                         10    ###                                        
+
+6 rows selected.
+
+SQL>select * from drldemo;
+
+no rows selected
+
+SQL>select * from dmldemo;
+
+ EMPNO ENAME      ESAL HDATE                                                    
+------ -------- ------ ---------                                                
+  1101 naveen     1000 12-DEC-12                                                
+  1102            3000                                                          
+  4001 sunil      3000 30-JUN-12                                                
+  4002 chaitnya   4500 12-JAN-12                                                
+  9001 varma      5500 05-MAY-05                                                
+  9002 sharma     5500 05-MAY-05                                                
+
+6 rows selected.
+
+SQL>select * from tcldemo;
+
+ EMPNO ENAME      ESAL      MGRNO DEPTNO                                        
+------ -------- ------ ---------- ------                                        
+  2001 kasturi   34000       1105     30                                        
+  2002 madhu     36000       1105     30                                        
+  2003 naveen    36000       1105     30                                        
+  2004 varma     45000       2001     40                                        
+  2005 sharma    45000       2001     40                                        
+
+SQL>select deptno,sum(esal) from tcldemo
+  2  group by deptno;
+
+DEPTNO  SUM(ESAL)                                                               
+------ ----------                                                               
+    30     106000                                                               
+    40      90000                                                               
+
+SQL>select deptno,sum(esal) from tcldemo
+  2  group by rollup(deptno);
+
+DEPTNO  SUM(ESAL)                                                               
+------ ----------                                                               
+    30     106000                                                               
+    40      90000                                                               
+           196000                                                               
+
+SQL>select deptno,sum(esal) from tcldemo
+  2  group by cube(deptno);
+
+DEPTNO  SUM(ESAL)                                                               
+------ ----------                                                               
+           196000                                                               
+    30     106000                                                               
+    40      90000                                                               
+
+SQL>select ename,esal,rank() over (order by esal desc) as rnk from
+  2  jemp
+  3  ;
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+aniruddh                 1                                                      
+DBA                      1                                                      
+DBA                      1                                                      
+DBA                      1                                                      
+DBA                      1                                                      
+naveen1                  1                                                      
+naveen2                  1                                                      
+naveen3                  1                                                      
+naveen4                  1                                                      
+naveen5                  1                                                      
+naveen6                  1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen7                  1                                                      
+naveen8                  1                                                      
+naveen9                  1                                                      
+naveen10                 1                                                      
+naveen11                 1                                                      
+naveen12                 1                                                      
+naveen13                 1                                                      
+naveen14                 1                                                      
+naveen15                 1                                                      
+naveen16                 1                                                      
+naveen17                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen18                 1                                                      
+naveen19                 1                                                      
+naveen20                 1                                                      
+naveen21                 1                                                      
+naveen22                 1                                                      
+naveen23                 1                                                      
+naveen24                 1                                                      
+naveen25                 1                                                      
+naveen26                 1                                                      
+naveen27                 1                                                      
+naveen28                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen29                 1                                                      
+naveen30                 1                                                      
+naveen31                 1                                                      
+naveen32                 1                                                      
+naveen33                 1                                                      
+naveen34                 1                                                      
+naveen35                 1                                                      
+naveen36                 1                                                      
+naveen37                 1                                                      
+naveen38                 1                                                      
+naveen39                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen40                 1                                                      
+naveen41                 1                                                      
+naveen42                 1                                                      
+naveen43                 1                                                      
+naveen44                 1                                                      
+naveen45                 1                                                      
+naveen46                 1                                                      
+naveen47                 1                                                      
+naveen48                 1                                                      
+naveen49                 1                                                      
+naveen50                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen51                 1                                                      
+naveen52                 1                                                      
+naveen53                 1                                                      
+naveen54                 1                                                      
+naveen55                 1                                                      
+naveen56                 1                                                      
+naveen57                 1                                                      
+naveen58                 1                                                      
+naveen59                 1                                                      
+naveen60                 1                                                      
+naveen61                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen62                 1                                                      
+naveen63                 1                                                      
+naveen64                 1                                                      
+naveen65                 1                                                      
+naveen66                 1                                                      
+naveen67                 1                                                      
+naveen68                 1                                                      
+naveen69                 1                                                      
+naveen70                 1                                                      
+naveen71                 1                                                      
+naveen72                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen73                 1                                                      
+naveen74                 1                                                      
+naveen75                 1                                                      
+naveen76                 1                                                      
+naveen77                 1                                                      
+naveen78                 1                                                      
+naveen79                 1                                                      
+naveen80                 1                                                      
+naveen81                 1                                                      
+naveen82                 1                                                      
+naveen83                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen84                 1                                                      
+naveen85                 1                                                      
+naveen86                 1                                                      
+naveen87                 1                                                      
+naveen88                 1                                                      
+naveen89                 1                                                      
+naveen90                 1                                                      
+naveen91                 1                                                      
+naveen92                 1                                                      
+naveen93                 1                                                      
+naveen94                 1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+naveen95                 1                                                      
+naveen96                 1                                                      
+naveen97                 1                                                      
+naveen98                 1                                                      
+naveen99                 1                                                      
+naveen10                 1                                                      
+0                                                                               
+                                                                                
+nav                      1                                                      
+sun                      1                                                      
+prab                     1                                                      
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+tej                      1                                                      
+DBA       45000        110                                                      
+ravi      31000        111                                                      
+james     20000        112                                                      
+
+112 rows selected.
+
+SQL>select ename,esal,rank() over (order by esal desc) as rnk from
+  2  jemp1;
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+amar                     1                                                      
+sai                      1                                                      
+nav                      1                                                      
+hari                     1                                                      
+naveen                   1                                                      
+ravi      31000          6                                                      
+sharma    29000          7                                                      
+james     20000          8                                                      
+bond      20000          8                                                      
+varma      9292         10                                                      
+
+10 rows selected.
+
+SQL>delete from jemp1 where esal is null;
+
+5 rows deleted.
+
+SQL>select * from jemp;
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+  2033 james     20000                                                          
+  1011 aniruddh                                                                 
+  7369 DBA                                                                      
+  7566 DBA                                                                      
+  7788 DBA                                                                      
+  7876 DBA                                                                      
+  7902 DBA       45000                                                          
+  1106 ravi      31000     90                                                   
+     1 naveen1                                                                  
+     2 naveen2                                                                  
+     3 naveen3                                                                  
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+     4 naveen4                                                                  
+     5 naveen5                                                                  
+     6 naveen6                                                                  
+     7 naveen7                                                                  
+     8 naveen8                                                                  
+     9 naveen9                                                                  
+    10 naveen10                                                                 
+    11 naveen11                                                                 
+    12 naveen12                                                                 
+    13 naveen13                                                                 
+    14 naveen14                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    15 naveen15                                                                 
+    16 naveen16                                                                 
+    17 naveen17                                                                 
+    18 naveen18                                                                 
+    19 naveen19                                                                 
+    20 naveen20                                                                 
+    21 naveen21                                                                 
+    22 naveen22                                                                 
+    23 naveen23                                                                 
+    24 naveen24                                                                 
+    25 naveen25                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    26 naveen26                                                                 
+    27 naveen27                                                                 
+    28 naveen28                                                                 
+    29 naveen29                                                                 
+    30 naveen30                                                                 
+    31 naveen31                                                                 
+    32 naveen32                                                                 
+    33 naveen33                                                                 
+    34 naveen34                                                                 
+    35 naveen35                                                                 
+    36 naveen36                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    37 naveen37                                                                 
+    38 naveen38                                                                 
+    39 naveen39                                                                 
+    40 naveen40                                                                 
+    41 naveen41                                                                 
+    42 naveen42                                                                 
+    43 naveen43                                                                 
+    44 naveen44                                                                 
+    45 naveen45                                                                 
+    46 naveen46                                                                 
+    47 naveen47                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    48 naveen48                                                                 
+    49 naveen49                                                                 
+    50 naveen50                                                                 
+    51 naveen51                                                                 
+    52 naveen52                                                                 
+    53 naveen53                                                                 
+    54 naveen54                                                                 
+    55 naveen55                                                                 
+    56 naveen56                                                                 
+    57 naveen57                                                                 
+    58 naveen58                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    59 naveen59                                                                 
+    60 naveen60                                                                 
+    61 naveen61                                                                 
+    62 naveen62                                                                 
+    63 naveen63                                                                 
+    64 naveen64                                                                 
+    65 naveen65                                                                 
+    66 naveen66                                                                 
+    67 naveen67                                                                 
+    68 naveen68                                                                 
+    69 naveen69                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    70 naveen70                                                                 
+    71 naveen71                                                                 
+    72 naveen72                                                                 
+    73 naveen73                                                                 
+    74 naveen74                                                                 
+    75 naveen75                                                                 
+    76 naveen76                                                                 
+    77 naveen77                                                                 
+    78 naveen78                                                                 
+    79 naveen79                                                                 
+    80 naveen80                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    81 naveen81                                                                 
+    82 naveen82                                                                 
+    83 naveen83                                                                 
+    84 naveen84                                                                 
+    85 naveen85                                                                 
+    86 naveen86                                                                 
+    87 naveen87                                                                 
+    88 naveen88                                                                 
+    89 naveen89                                                                 
+    90 naveen90                                                                 
+    91 naveen91                                                                 
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+    92 naveen92                                                                 
+    93 naveen93                                                                 
+    94 naveen94                                                                 
+    95 naveen95                                                                 
+    96 naveen96                                                                 
+    97 naveen97                                                                 
+    98 naveen98                                                                 
+    99 naveen99                                                                 
+   100 naveen10                                                                 
+       0                                                                        
+                                                                                
+
+ EMPNO ENAME      ESAL DEPTNO HDATE     EMAILID                                 
+------ -------- ------ ------ --------- --------------------                    
+  9007 nav                                                                      
+  9009 sun                                                                      
+  9011 prab                                                                     
+  9013 tej                                                                      
+
+112 rows selected.
+
+SQL>select * from jemp1;
+
+ EMPNO ENAME      ESAL      MGRNO DEPTNO                                        
+------ -------- ------ ---------- ------                                        
+  2009 james     20000       1102     20                                        
+  2011 bond      20000       1102     20                                        
+  1106 ravi      31000       1103     90                                        
+  1107 sharma    29000       1103     60                                        
+  1108 varma      9292       1104     70                                        
+
+SQL>select ename,esal,rank() over (order by esal desc) as rnk from
+  2  jemp1;
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+ravi      31000          1                                                      
+sharma    29000          2                                                      
+bond      20000          3                                                      
+james     20000          3                                                      
+varma      9292          5                                                      
+
+SQL>select ename,esal,dense_rank() over (order by esal desc) as rnk from
+  2  jemp1;
+
+ENAME      ESAL        RNK                                                      
+-------- ------ ----------                                                      
+ravi      31000          1                                                      
+sharma    29000          2                                                      
+bond      20000          3                                                      
+james     20000          3                                                      
+varma      9292          4                                                      
+
+SQL>spool off
